@@ -1,0 +1,48 @@
+# Ignore the test binary
+ini_test
+
+# Ignore backup and temporary files
+*~
+*.swp
+*.swo
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Project-specificfiles
+*.err
+*.log
+*.bak
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
