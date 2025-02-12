@@ -59,11 +59,15 @@ void test_writing(IniFile& config) {
 int main() {
     LCBLog logger;  // Create the logger instance
 
-    IniFile config("wsprrypi.ini", logger);  // Pass logger reference to IniFile
+    // Create instance without a filename
+    IniFile ini(logger);
+    
+    // Set the filename later
+    ini.set_filename("wsprrypi.ini");
 
-    test_reading(config);
-    test_writing(config);
-    test_malformed_entries(config);
+    test_reading(ini);
+    test_writing(ini);
+    test_malformed_entries(ini);
 
     return 0;
 }

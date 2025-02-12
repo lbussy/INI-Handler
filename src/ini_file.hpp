@@ -9,7 +9,10 @@
 
 class IniFile {
 public:
-    IniFile(const std::string &filename, LCBLog &logger);  // Require LCBLog reference
+    IniFile(LCBLog &logger);  // Constructor without filename
+    IniFile(const std::string &filename, LCBLog &logger);
+
+    void set_filename(const std::string &filename);
 
     bool load();
     bool save();

@@ -1,6 +1,9 @@
 # Ignore the test binary
 ini_test
 
+# Ignore the sub module
+LCBLog/
+
 # Ignore backup and temporary files
 *~
 *.swp
@@ -22,6 +25,7 @@ ini_test
 # Compiled Object files
 *.slo
 *.lo
+*.o
 
 # Precompiled Headers
 *.gch

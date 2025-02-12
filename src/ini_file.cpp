@@ -8,12 +8,22 @@
 
 bool _pendingChanges = false;
 
+IniFile::IniFile(LCBLog &logger) : _logger(logger) {
+    _logger.logS(INFO, "IniFile instance created without filename.");
+}
+
 IniFile::IniFile(const std::string &filename, LCBLog &logger)
-    : _filename(filename), _logger(logger) {
+    : _logger(logger) {
+    set_filename(filename);
     load();
 }
 
 bool IniFile::load() {
+    if (_filename.empty()) {
+        _logger.logE(ERROR, "Error: Filename not set for loading.");
+        return false;
+    }
+
     std::ifstream file(_filename);
     if (!file.is_open()) {
         _logger.logE(ERROR, "Error: Cannot open file", _filename);
@@ -64,6 +74,11 @@ bool IniFile::load() {
 }
 
 bool IniFile::save() {
+    if (_filename.empty()) {
+        _logger.logE(ERROR, "Error: Filename not set for saving.");
+        return false;
+    }
+
     std::ofstream file(_filename);
     if (!file.is_open()) {
         _logger.logE(ERROR, "Error: Cannot write to file", _filename);
@@ -189,4 +204,10 @@ void IniFile::commit_changes() {
         save();
         _pendingChanges = false;
     }
+}
+
+void IniFile::set_filename(const std::string &filename) {
+    _filename = filename;
+    _logger.logS(INFO, "Filename set to:", _filename);
+    load();
 }
