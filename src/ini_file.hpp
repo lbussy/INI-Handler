@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <map>
 #include <vector>
-#include "../src/LCBLog/lcblog.hpp"  // Include LCBLog
+#include "lcblog.hpp"  // Include LCBLog
 
 class IniFile {
 public:

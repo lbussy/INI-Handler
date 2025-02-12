@@ -1,6 +1,7 @@
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -Wall -Wextra -pedantic -std=c++17
+CXXFLAGS += -ILCBLog/src
 LDFLAGS := 
 
 # Directories
