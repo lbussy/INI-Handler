@@ -48,7 +48,7 @@ int main() {
 
 ### Reading Values
 ```cpp
-std::string callSign = config.get_value("Common", "Call Sign");
+std::string callSign = config.get_string_value("Common", "Call Sign");
 bool enabled = config.get_bool_value("Control", "Transmit");
 int power = config.get_int_value("Common", "TX Power", 10); // Default: 10
 double ppm = config.get_double_value("Extended", "PPM", 0.0); // Default: 0.0
@@ -56,7 +56,7 @@ double ppm = config.get_double_value("Extended", "PPM", 0.0); // Default: 0.0
 
 ### Writing Values
 ```cpp
-config.set_value("Common", "Call Sign", "TEST123");
+config.set_string_value("Common", "Call Sign", "TEST123");
 config.set_bool_value("Control", "Transmit", true);
 config.set_int_value("Common", "TX Power", 30);
 config.set_double_value("Extended", "PPM", 1.23);

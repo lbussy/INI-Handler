@@ -118,7 +118,7 @@ bool IniFile::save() {
     return true;
 }
 
-std::string IniFile::get_value(const std::string& section, const std::string& key) const {
+std::string IniFile::get_string_value(const std::string& section, const std::string& key) const {
     auto sec = _data.find(section);
     if (sec == _data.end()) {
         _logger.logE(ERROR, "Section not found: ", section);
@@ -140,7 +140,7 @@ bool IniFile::string_to_bool(const std::string &value) {
 
 int IniFile::get_int_value(const std::string& section, const std::string& key) const {
     try {
-        return std::stoi(get_value(section, key));
+        return std::stoi(get_string_value(section, key));
     } catch (const std::exception& e) {
         _logger.logE(ERROR, "Error parsing integer for ", key, ":", e.what(), ".");
         return 0;
@@ -149,7 +149,7 @@ int IniFile::get_int_value(const std::string& section, const std::string& key) c
 
 double IniFile::get_double_value(const std::string& section, const std::string& key) const {
     try {
-        return std::stod(get_value(section, key));
+        return std::stod(get_string_value(section, key));
     } catch (const std::exception& e) {
         _logger.logE(ERROR, "Error parsing double for ", key, ":", e.what(), ".");
         return 0.0;
@@ -162,14 +162,14 @@ std::string IniFile::bool_to_string(bool value) {
 
 bool IniFile::get_bool_value(const std::string& section, const std::string& key) const {
     try {
-        return string_to_bool(get_value(section, key));
+        return string_to_bool(get_string_value(section, key));
     } catch (const std::runtime_error& e) {
         _logger.logE(ERROR, "Error parsing bool for ", key, ":", e.what(), ".");
         return false;
     }
 }
 
-void IniFile::set_value(const std::string& section, const std::string& key, const std::string& value) {
+void IniFile::set_string_value(const std::string& section, const std::string& key, const std::string& value) {
     _data[section][key] = value;
     _pendingChanges = true;
 }

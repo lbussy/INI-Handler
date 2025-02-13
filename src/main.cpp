@@ -9,7 +9,7 @@ void test_malformed_entries(IniFile &config)
 
     try
     {
-        config.set_value("Common", "TX Power", "abc"); // Invalid integer
+        config.set_string_value("Common", "TX Power", "abc"); // Invalid integer
         int txPower = config.get_int_value("Common", "TX Power");
         std::cout << "TX Power after setting invalid value: " << txPower << "\n";
     }
@@ -20,7 +20,7 @@ void test_malformed_entries(IniFile &config)
 
     try
     {
-        config.set_value("Extended", "PPM", "xyz"); // Invalid double
+        config.set_string_value("Extended", "PPM", "xyz"); // Invalid double
         double ppm = config.get_double_value("Extended", "PPM");
         std::cout << "PPM after setting invalid value: " << ppm << "\n";
     }
@@ -35,15 +35,15 @@ void test_reading(IniFile &config)
     std::cout << "\n🔎 Testing Read Operations:\n";
 
     std::cout << "✅ Transmit Enabled: " << config.get_bool_value("Control", "Transmit") << "\n";
-    std::cout << "✅ Call Sign: " << config.get_value("Common", "Call Sign") << "\n";
+    std::cout << "✅ Call Sign: " << config.get_string_value("Common", "Call Sign") << "\n";
     std::cout << "✅ TX Power: " << config.get_int_value("Common", "TX Power") << "\n";
     std::cout << "✅ Power Level: " << config.get_int_value("Extended", "Power Level") << "\n";
     std::cout << "✅ PPM: " << config.get_double_value("Extended", "PPM") << "\n";
-    std::cout << "✅ FREQ: " << config.get_value("Common", "Frequency") << "\n";
+    std::cout << "✅ FREQ: " << config.get_string_value("Common", "Frequency") << "\n";
 
     try
     {
-        std::cout << "❌ Non-existent Section: " << config.get_value("NonExistent", "Key") << "\n";
+        std::cout << "❌ Non-existent Section: " << config.get_string_value("NonExistent", "Key") << "\n";
     }
     catch (const std::exception &e)
     {
@@ -53,7 +53,7 @@ void test_reading(IniFile &config)
     try
     {
         std::cout << "❌ Non-existent Key in Existing Section: "
-                  << config.get_value("Control", "FakeKey") << "\n";
+                  << config.get_string_value("Control", "FakeKey") << "\n";
     }
     catch (const std::exception &e)
     {
@@ -68,9 +68,9 @@ void test_writing(IniFile &config)
     config.set_bool_value("Control", "Transmit", true);
     config.set_int_value("Common", "TX Power", 30);
     config.set_double_value("Extended", "PPM", 1.23);
-    config.set_value("Common", "Call Sign", "TEST123");
+    config.set_string_value("Common", "Call Sign", "TEST123");
 
-    config.set_value("NewSection", "NewKey", "NewValue");
+    config.set_string_value("NewSection", "NewKey", "NewValue");
 
     config.commit_changes();
 }
@@ -85,10 +85,10 @@ void test_reading_wsprry_pi(IniFile &config)
         std::cout << "✅ Transmit Enabled: " << config.get_bool_value("Control", "Transmit") << "\n";
 
         std::cout << "\n🔎 Reading [Common]\n";
-        std::cout << "✅ Call Sign: " << config.get_value("Common", "Call Sign") << "\n";
-        std::cout << "✅ Grid Square: " << config.get_value("Common", "Grid Square") << "\n";
+        std::cout << "✅ Call Sign: " << config.get_string_value("Common", "Call Sign") << "\n";
+        std::cout << "✅ Grid Square: " << config.get_string_value("Common", "Grid Square") << "\n";
         std::cout << "✅ TX Power: " << config.get_int_value("Common", "TX Power") << "\n";
-        std::cout << "✅ FREQ: " << config.get_value("Common", "Frequency") << "\n";
+        std::cout << "✅ FREQ: " << config.get_string_value("Common", "Frequency") << "\n";
 
         std::cout << "\n🔎 Reading [Extended]\n";
         std::cout << "✅ PPM: " << config.get_double_value("Extended", "PPM") << "\n";
@@ -107,8 +107,8 @@ void test_reading_wsprry_pi(IniFile &config)
 
     try
     {
-        std::cout << "\n🔎 Reading get_value() [Section Error]\n";
-        config.get_value("Bad Section", "Bad Key");
+        std::cout << "\n🔎 Reading get_string_value() [Section Error]\n";
+        config.get_string_value("Bad Section", "Bad Key");
     }
     catch (const std::exception &e)
     {
@@ -117,8 +117,8 @@ void test_reading_wsprry_pi(IniFile &config)
 
     try
     {
-        std::cout << "\n🔎 Reading get_value() [Key Error]\n";
-        config.get_value("Common", "Bad Key");
+        std::cout << "\n🔎 Reading get_string_value() [Key Error]\n";
+        config.get_string_value("Common", "Bad Key");
     }
     catch (const std::exception &e)
     {

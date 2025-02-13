@@ -17,12 +17,12 @@ public:
     bool load();
     bool save();
 
-    std::string get_value(const std::string &section, const std::string &key) const;
+    std::string get_string_value(const std::string &section, const std::string &key) const;
     bool get_bool_value(const std::string &section, const std::string &key) const;
     int get_int_value(const std::string &section, const std::string &key) const;
     double get_double_value(const std::string &section, const std::string &key) const;
 
-    void set_value(const std::string &section, const std::string &key, const std::string &value);
+    void set_string_value(const std::string &section, const std::string &key, const std::string &value);
     void set_bool_value(const std::string &section, const std::string &key, bool value);
     void set_int_value(const std::string &section, const std::string &key, int value);
     void set_double_value(const std::string &section, const std::string &key, double value);
