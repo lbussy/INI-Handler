@@ -1,12 +1,13 @@
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -Wall -Wextra -pedantic -std=c++17
-CXXFLAGS += -ILCBLog/src
+# CXXFLAGS += -ILCBLog/src
+CXXFLAGS += -I../../LCBLog/src
 LDFLAGS := 
 
 # Directories
 SRC_DIR := .
-LCBLOG_DIR := LCBLog
+LCBLOG_DIR := ../../LCBLog/src
 
 # Explicitly define sources WITHOUT trailing spaces:
 SRCS := $(SRC_DIR)/ini_file.cpp $(LCBLOG_DIR)/lcblog.cpp
@@ -28,9 +29,9 @@ $(SRC_DIR)/ini_file.o: $(SRC_DIR)/ini_file.cpp
 $(LCBLOG_DIR)/lcblog.o: $(LCBLOG_DIR)/lcblog.cpp
 	$(CXX) $(CXXFLAGS) -c "$<" -o "$@"
 
-# Clean all compiled files (EXCLUDE LCBLog directory)
+# Clean all compiled files (INCLUDING dependency files)
 clean:
-	rm -f $(OBJS) $(TEST_OBJ) $(TEST_BIN)
+	rm -f $(OBJS) $(TEST_OBJ) $(TEST_BIN) $(SRC_DIR)/*.d $(LCBLOG_DIR)/*.d
 
 # Show detected source and object files
 files:

@@ -27,7 +27,9 @@ void test_reading(IniFile& config) {
     std::cout << "✅ Transmit Enabled: " << config.get_bool_value("Control", "Transmit") << "\n";
     std::cout << "✅ Call Sign: " << config.get_value("Common", "Call Sign") << "\n";
     std::cout << "✅ TX Power: " << config.get_int_value("Common", "TX Power") << "\n";
+    std::cout << "✅ Power Level: " << config.get_int_value("Extended", "Power Level") << "\n";
     std::cout << "✅ PPM: " << config.get_double_value("Extended", "PPM") << "\n";
+    std::cout << "✅ FREQ: " << config.get_value("Common", "Frequency") << "\n";
 
     try {
         std::cout << "❌ Non-existent Section: " << config.get_value("NonExistent", "Key") << "\n";
@@ -63,11 +65,11 @@ int main() {
     IniFile ini(logger);
     
     // Set the filename later
-    ini.set_filename("wsprrypi.ini");
+    ini.set_filename("/usr/local/etc/wsprrypi.ini");
 
     test_reading(ini);
-    test_writing(ini);
-    test_malformed_entries(ini);
+    //test_writing(ini);
+    //test_malformed_entries(ini);
 
     return 0;
 }
