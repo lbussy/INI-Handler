@@ -1,13 +1,14 @@
 # Compiler and flags
 CXX := g++
 CXXFLAGS := -Wall -Wextra -pedantic -std=c++17
-# CXXFLAGS += -ILCBLog/src
-CXXFLAGS += -I../../LCBLog/src
+CXXFLAGS += -ILCBLog/src
+# CXXFLAGS += -I../../LCBLog/src
 LDFLAGS := 
 
 # Directories
 SRC_DIR := .
-LCBLOG_DIR := ../../LCBLog/src
+LCBLOG_DIR := LCBLog/src
+#LCBLOG_DIR := ../../LCBLog/src
 
 # Explicitly define sources WITHOUT trailing spaces:
 SRCS := $(SRC_DIR)/ini_file.cpp $(LCBLOG_DIR)/lcblog.cpp

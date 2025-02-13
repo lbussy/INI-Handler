@@ -128,7 +128,7 @@ std::string IniFile::get_value(const std::string& section, const std::string& ke
     auto val = sec->second.find(key);
     if (val == sec->second.end()) {
         _logger.logE(ERROR, "Key not found in section: ", key);
-        throw std::runtime_error("Key '" + key + "' not found in section '" + section + "'.");
+        throw std::runtime_error("Key '" + key + "' not found in section '" + section + "'");
     }
 
     return val->second;
@@ -142,7 +142,7 @@ int IniFile::get_int_value(const std::string& section, const std::string& key) c
     try {
         return std::stoi(get_value(section, key));
     } catch (const std::exception& e) {
-        _logger.logE(ERROR, "Error parsing integer for ", section + "/" + key, e.what(), ".");
+        _logger.logE(ERROR, "Error parsing integer for ", key, ":", e.what(), ".");
         return 0;
     }
 }
@@ -151,7 +151,7 @@ double IniFile::get_double_value(const std::string& section, const std::string& 
     try {
         return std::stod(get_value(section, key));
     } catch (const std::exception& e) {
-        _logger.logE(ERROR, "Error parsing double for ", section + "/" + key, e.what(), ".");
+        _logger.logE(ERROR, "Error parsing double for ", key, ":", e.what(), ".");
         return 0.0;
     }
 }
@@ -164,7 +164,7 @@ bool IniFile::get_bool_value(const std::string& section, const std::string& key)
     try {
         return string_to_bool(get_value(section, key));
     } catch (const std::runtime_error& e) {
-        _logger.logE(ERROR, e.what());
+        _logger.logE(ERROR, "Error parsing bool for ", key, ":", e.what(), ".");
         return false;
     }
 }
