@@ -1,6 +1,23 @@
+# -----------------------------------------------------------------------------
+# @file Makefile
+# @brief Build system for the INI-Handler library and associated tests.
+#
+# This Makefile automates the build process for the INI-Handler library and
+# associated test program. The library is built as a static library, and the
+# test program is built as an executable. The Makefile supports the following
+# targets:
+#
+# - `all`: Builds the static library `liblcblog.a`.
+# - `test`: Builds the test executable `lcblog_test` with debug flags enabled.
+# - `debug`: Builds the static library with debugging symbols enabled.
+# - `lint`: Runs cppcheck for static code analysis on the source files.
+# - `clean`: Cleans up build artifacts (object files, library, test executable).
+# - `help`: Displays available make targets and their descriptions.
+# -----------------------------------------------------------------------------
+
 # Compiler and flags
-CXX := g++
-CXXFLAGS := -Wall -Wextra -pedantic -std=c++17
+CXX ?= g++
+CXXFLAGS ?= -Wall -Wextra -pedantic -std=c++17
 CXXFLAGS += -ILCBLog/src
 # CXXFLAGS += -I../../LCBLog/src
 LDFLAGS := 
@@ -15,7 +32,7 @@ SRCS := $(SRC_DIR)/ini_file.cpp $(LCBLOG_DIR)/lcblog.cpp
 OBJS := $(SRC_DIR)/ini_file.o $(LCBLOG_DIR)/lcblog.o
 
 # Test program sources (ONLY compiled in 'make test')
-TEST_SRC := main.cpp
+TEST_SRC := $(SRC_DIR)/main.cpp
 TEST_OBJ := $(TEST_SRC:.cpp=.o)
 TEST_BIN := ini_test
 
@@ -24,15 +41,18 @@ all: $(OBJS)
 
 # Rules for ini_file
 $(SRC_DIR)/ini_file.o: $(SRC_DIR)/ini_file.cpp
-	$(CXX) $(CXXFLAGS) -c "$<" -o "$@"
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c "$<" -o "$@"
 
 # Rules for lcblog
 $(LCBLOG_DIR)/lcblog.o: $(LCBLOG_DIR)/lcblog.cpp
-	$(CXX) $(CXXFLAGS) -c "$<" -o "$@"
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c "$<" -o "$@"
+
+.PHONY: all clean files define test lint help
 
 # Clean all compiled files (INCLUDING dependency files)
 clean:
-	rm -f $(OBJS) $(TEST_OBJ) $(TEST_BIN) $(SRC_DIR)/*.d $(LCBLOG_DIR)/*.d
+	rm -f $(OBJS) $(TEST_OBJ) $(TEST_BIN)
+	find $(SRC_DIR) $(LCBLOG_DIR) -name "*.d" -delete
 
 # Show detected source and object files
 files:
@@ -53,7 +73,7 @@ test: $(OBJS) $(TEST_OBJ)
 
 # Run static analysis with cppcheck
 lint:
-	@which cppcheck >/dev/null 2>&1 || { echo "Error: cppcheck not found. Please install it."; exit 1; }
+	@command -v cppcheck >/dev/null 2>&1 || { echo "Error: cppcheck not found."; exit 1; }
 	cppcheck --enable=all --std=c++17 --quiet $(SRCS) $(TEST_SRC)
 
 # Display available targets
@@ -62,7 +82,7 @@ help:
 	@echo "  make (or make all)   - Build the ini_file library only"
 	@echo "  make clean           - Remove all object files and test binary"
 	@echo "  make files           - Show detected source and object files"
-	@echo "  make defines         - Show all defined macros"
+	@echo "  make define          - Show all defined macros"
 	@echo "  make test            - Build and run the test program"
 	@echo "  make lint            - Run static analysis with cppcheck"
 	@echo "  make help            - Show this help message"

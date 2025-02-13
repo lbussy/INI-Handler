@@ -1,7 +1,40 @@
-#include "ini_file.hpp"
+/**
+ * @file main.cpp
+ * @brief Main file for testing the IniFile class
+ * @details This file is used to test the IniFile class. It reads an INI file,
+ *          performs some read and write operations, and tests exception
+ *          handling.
+ * 
+ * This software is distributed under the MIT License. See LICENSE.MIT.md for
+ * details.
+ *
+ * Copyright (C) 2023-2025 Lee C. Bussy (@LBussy). All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+ #include "ini_file.hpp"
+#include "lcblog.hpp"
 #include <iostream>
 
 LCBLog llog; // Create the logger instance
+std::string filename = "/usr/local/etc/wsprrypi.ini";
 
 void test_malformed_entries(IniFile &config)
 {
@@ -104,10 +137,14 @@ void test_reading_wsprry_pi(IniFile &config)
     {
         std::cerr << "\n" << "Caught Exception: " << e.what() << "\n";
     }
+}
 
+void test_exceptions(IniFile &config)
+{
+    std::cout << "\n🔎 Testing Wsprry Pi INI Exception Processing\n";
     try
     {
-        std::cout << "\n🔎 Reading get_string_value() [Section Error]\n";
+        std::cout << "\n❌ Reading get_string_value() [Section Error]\n";
         config.get_string_value("Bad Section", "Bad Key");
     }
     catch (const std::exception &e)
@@ -117,7 +154,17 @@ void test_reading_wsprry_pi(IniFile &config)
 
     try
     {
-        std::cout << "\n🔎 Reading get_string_value() [Key Error]\n";
+        std::cout << "\n❌ Reading get_bool_value() [Section Error]\n";
+        config.get_bool_value("Bad Section", "Bad Key");
+    }
+    catch (const std::exception &e)
+    {
+        llog.logE(ERROR, "Caught Exception: ", e.what());
+    }
+
+    try
+    {
+        std::cout << "\n❌ Reading get_string_value() [Key Error]\n";
         config.get_string_value("Common", "Bad Key");
     }
     catch (const std::exception &e)
@@ -127,7 +174,7 @@ void test_reading_wsprry_pi(IniFile &config)
 
     try
     {
-        std::cout << "\n🔎 Reading get_int_value() [Key Error]\n";
+        std::cout << "\n❌ Reading get_int_value() [Key Error]\n";
         config.get_int_value("Common", "Bad Key");
     }
     catch (const std::exception &e)
@@ -137,11 +184,22 @@ void test_reading_wsprry_pi(IniFile &config)
 
     try
     {
-        std::cout << "\n🔎 Reading get_double_value(0 [Key Error]\n";
+        std::cout << "\n❌ Reading get_double_value(0 [Key Error]\n";
         config.get_double_value("Common", "Bad Key");
     }
     catch (const std::exception &e)
     {
+        llog.logE(ERROR, "Caught Exception: ", e.what());
+    }
+
+    // Change PPM to "1e500" in the INI to simulate the error
+    try
+    {
+        std::cout << "\n✅ PPM (see comments to force error): " << config.get_double_value("Extended", "PPM") << "\n";
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "\n❌ Reading get_double_value() [stod() Error]\n";
         llog.logE(ERROR, "Caught Exception: ", e.what());
     }
 }
@@ -153,17 +211,18 @@ int main()
     llog.enableTimestamps(true);
 
     // Create an instance of the IniFile class
-    IniFile ini(llog);
+    IniFile ini;
+    // IniFile ini(filename);
 
     // Set the filename
-    // ini.set_filename("wsprrypi.ini");
-    ini.set_filename("/usr/local/etc/wsprrypi.ini");
+    ini.set_filename(filename);
 
     // test_reading(ini);
     // test_writing(ini);
     // test_malformed_entries(ini);
 
-    test_reading_wsprry_pi(ini);
+    //test_reading_wsprry_pi(ini);
+    test_exceptions(ini);
 
     return 0;
 }
