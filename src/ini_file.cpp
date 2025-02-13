@@ -26,7 +26,7 @@ bool IniFile::load() {
 
     std::ifstream file(_filename);
     if (!file.is_open()) {
-        _logger.logE(ERROR, "Error: Cannot open file", _filename);
+        _logger.logE(ERROR, "Error: Cannot open file ", _filename, ".");
         return false;
     }
 
@@ -68,7 +68,7 @@ bool IniFile::load() {
         line_num++;
     }
 
-    _logger.logS(INFO, "Successfully loaded INI file:", _filename);
+    _logger.logS(INFO, "Successfully loaded INI file: ", _filename, ".");
     file.close();
     return true;
 }
@@ -81,7 +81,7 @@ bool IniFile::save() {
 
     std::ofstream file(_filename);
     if (!file.is_open()) {
-        _logger.logE(ERROR, "Error: Cannot write to file", _filename);
+        _logger.logE(ERROR, "Error: Cannot write to file ", _filename, ".");
         return false;
     }
 
@@ -114,20 +114,20 @@ bool IniFile::save() {
     }
 
     file.close();
-    _logger.logS(INFO, "Successfully saved INI file:", _filename);
+    _logger.logS(INFO, "Successfully saved INI file: ", _filename, ".");
     return true;
 }
 
 std::string IniFile::get_value(const std::string& section, const std::string& key) const {
     auto sec = _data.find(section);
     if (sec == _data.end()) {
-        _logger.logE(ERROR, "Section not found:", section);
+        _logger.logE(ERROR, "Section not found: ", section);
         throw std::runtime_error("Section '" + section + "' not found in INI file.");
     }
 
     auto val = sec->second.find(key);
     if (val == sec->second.end()) {
-        _logger.logE(ERROR, "Key not found in section:", key);
+        _logger.logE(ERROR, "Key not found in section: ", key);
         throw std::runtime_error("Key '" + key + "' not found in section '" + section + "'.");
     }
 
@@ -142,7 +142,7 @@ int IniFile::get_int_value(const std::string& section, const std::string& key) c
     try {
         return std::stoi(get_value(section, key));
     } catch (const std::exception& e) {
-        _logger.logE(ERROR, "Error parsing integer for", section + "/" + key, e.what());
+        _logger.logE(ERROR, "Error parsing integer for ", section + "/" + key, e.what(), ".");
         return 0;
     }
 }
@@ -151,7 +151,7 @@ double IniFile::get_double_value(const std::string& section, const std::string& 
     try {
         return std::stod(get_value(section, key));
     } catch (const std::exception& e) {
-        _logger.logE(ERROR, "Error parsing double for", section + "/" + key, e.what());
+        _logger.logE(ERROR, "Error parsing double for ", section + "/" + key, e.what(), ".");
         return 0.0;
     }
 }
@@ -208,6 +208,6 @@ void IniFile::commit_changes() {
 
 void IniFile::set_filename(const std::string &filename) {
     _filename = filename;
-    _logger.logS(INFO, "Filename set to:", _filename);
+    _logger.logS(INFO, "Filename set to: ", _filename, ".");
     load();
 }
