@@ -4,7 +4,7 @@
  * @details This file is used to test the IniFile class. It reads an INI file,
  *          performs some read and write operations, and tests exception
  *          handling.
- * 
+ *
  * This software is distributed under the MIT License. See LICENSE.MIT.md for
  * details.
  *

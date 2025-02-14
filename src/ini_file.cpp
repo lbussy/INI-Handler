@@ -3,7 +3,7 @@
  * @brief Implementation of the IniFile class for handling INI file operations.
  * @details This class provides methods for loading, saving, and retrieving
  *          configuration values from an INI file, supporting multiple data types.
- * 
+ *
  * This software is distributed under the MIT License. See LICENSE.MIT.md for
  * details.
  *
