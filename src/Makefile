@@ -25,7 +25,7 @@ LDFLAGS :=
 # Directories
 SRC_DIR := .
 LCBLOG_DIR := LCBLog/src
-#LCBLOG_DIR := ../../LCBLog/src
+# LCBLOG_DIR := ../../LCBLog/src
 
 # Explicitly define sources WITHOUT trailing spaces:
 SRCS := $(SRC_DIR)/ini_file.cpp $(LCBLOG_DIR)/lcblog.cpp
