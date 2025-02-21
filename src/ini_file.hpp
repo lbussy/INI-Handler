@@ -56,7 +56,7 @@ public:
      * @brief Constructor with filename reference.
      * @param filename Path to the INI file.
      */
-    IniFile(const std::string &filename);
+    explicit IniFile(const std::string &filename);
 
     /**
      * @brief Sets the filename for loading and saving operations.

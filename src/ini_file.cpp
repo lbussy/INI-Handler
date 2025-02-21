@@ -56,13 +56,11 @@ IniFile::IniFile(const std::string &filename) {
 bool IniFile::load() {
     if (_filename.empty()) {
         throw std::runtime_error("Null value filename passed for load.");
-        return false;
     }
 
     std::ifstream file(_filename);
     if (!file.is_open()) {
-        throw std::runtime_error("Cannot open ini file " + _filename +  ".");
-        return false;
+        throw std::runtime_error("Cannot open ini file " + _filename + ".");
     }
 
     _data.clear();
@@ -256,6 +254,7 @@ bool IniFile::get_bool_value(const std::string& section, const std::string& key)
  * @param key The key name.
  * @param value The string value to set.
  */
+// cppcheck-suppress unusedFunction
 void IniFile::set_string_value(const std::string& section, const std::string& key, const std::string& value) {
     _data[section][key] = value;
     _pendingChanges = true;
@@ -328,6 +327,7 @@ bool IniFile::is_comment(const std::string &line) {
  * @details If there are unsaved changes, this function writes them to the file
  *          and resets the pending changes flag.
  */
+// cppcheck-suppress unusedFunction
 void IniFile::commit_changes() {
     if (_pendingChanges) {
         save();
