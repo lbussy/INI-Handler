@@ -17,7 +17,6 @@ This project is a simple and efficient **INI file parser** written in C++. It pr
 
 - **C++17 or later**
 - `g++` (or another C++ compiler with C++17 support)
-- `LCBLog` (for logging in provided tests)
 - `cppcheck` (for linting, optional)
 
 ## Installation

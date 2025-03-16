@@ -1,8 +1,11 @@
 # Ignore the test binary
-ini_test
+*_test
 
-# Ignore the sub module
-LCBLog/
+# Ignore the build folder
+build/
+
+# Ignore local INI
+src/*.ini
 
 # Ignore backup and temporary files
 *~

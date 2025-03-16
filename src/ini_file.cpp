@@ -36,7 +36,9 @@
  #include <cctype>
  #include <stdexcept>
 
-/** @brief Tracks whether there are pending changes to be saved. */
+/**
+ * @brief Tracks whether there are pending changes to be saved.
+ */
 bool _pendingChanges = false;
 
 /**

@@ -8,7 +8,7 @@
  * This software is distributed under the MIT License. See LICENSE.MIT.md for
  * details.
  *
- * Copyright (C) 2023-2025 Lee C. Bussy (@LBussy). All rights reserved.
+ * Copyright (C) 2025 Lee C. Bussy (@LBussy). All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,11 +30,9 @@
  */
 
 #include "ini_file.hpp"
-#include "lcblog.hpp"
 #include <iostream>
 
-LCBLog llog; // Create the logger instance
-std::string filename = "/usr/local/etc/wsprrypi.ini";
+std::string filename = "./test.ini";
 
 void test_malformed_entries(IniFile &config)
 {
@@ -149,7 +147,7 @@ void test_exceptions(IniFile &config)
     }
     catch (const std::exception &e)
     {
-        llog.logE(ERROR, "Caught Exception: ", e.what());
+        std::cerr << "ERROR: Caught Exception: " <<  e.what() << std::endl;
     }
 
     try
@@ -159,7 +157,7 @@ void test_exceptions(IniFile &config)
     }
     catch (const std::exception &e)
     {
-        llog.logE(ERROR, "Caught Exception: ", e.what());
+        std::cerr << "ERROR: Caught Exception: " << e.what() << std::endl;
     }
 
     try
@@ -169,7 +167,7 @@ void test_exceptions(IniFile &config)
     }
     catch (const std::exception &e)
     {
-        llog.logE(ERROR, "Caught Exception: ", e.what());
+        std::cerr << "ERROR: Caught Exception: " << e.what() << std::endl;
     }
 
     try
@@ -179,7 +177,7 @@ void test_exceptions(IniFile &config)
     }
     catch (const std::exception &e)
     {
-        llog.logE(ERROR, "Caught Exception: ", e.what());
+        std::cerr << "ERROR: Caught Exception: " << e.what() << std::endl;
     }
 
     try
@@ -189,7 +187,7 @@ void test_exceptions(IniFile &config)
     }
     catch (const std::exception &e)
     {
-        llog.logE(ERROR, "Caught Exception: ", e.what());
+        std::cerr << "ERROR: Caught Exception: " << e.what() << std::endl;
     }
 
     // Change PPM to "1e500" in the INI to simulate the error
@@ -200,16 +198,12 @@ void test_exceptions(IniFile &config)
     catch (const std::exception &e)
     {
         std::cout << "\n❌ Reading get_double_value() [stod() Error]\n";
-        llog.logE(ERROR, "Caught Exception: ", e.what());
+        std::cerr << "ERROR: Caught Exception: " << e.what() << std::endl;
     }
 }
 
 int main()
 {
-    // Create instance without a filename
-    llog.setLogLevel(DEBUG);
-    llog.enableTimestamps(true);
-
     // Create an instance of the IniFile class
     IniFile ini;
     // IniFile ini(filename);
