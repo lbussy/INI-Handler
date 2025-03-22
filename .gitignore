@@ -1,4 +1,5 @@
 # Ignore the test binary
+ini-handler*
 *_test
 
 # Ignore the build folder

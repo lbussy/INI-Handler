@@ -55,51 +55,86 @@ IniFile::IniFile(const std::string &filename) {
     load();
 }
 
-bool IniFile::load() {
-    if (_filename.empty()) {
+/**
+ * @brief Loads and parses the INI file into memory.
+ *
+ * @details
+ * This method opens the file specified by `_filename`, reads it line-by-line,
+ * and parses it into a section-key-value structure stored in `_data`.
+ * It also keeps the original lines in `_lines` and maps keys to line numbers
+ * in `_index`, allowing for comment preservation and in-place modification.
+ *
+ * Empty lines and comments are preserved but ignored in parsing.
+ * Inline comments after values (e.g., `key = value ; comment`) are trimmed.
+ *
+ * @throws std::runtime_error if `_filename` is empty or the file cannot be opened.
+ *
+ * @return true if the INI file was successfully loaded and parsed.
+ */
+bool IniFile::load()
+{
+    if (_filename.empty())
+    {
         throw std::runtime_error("Null value filename passed for load.");
     }
 
     std::ifstream file(_filename);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         throw std::runtime_error("Cannot open ini file " + _filename + ".");
     }
 
+    // Clear any previously loaded data
     _data.clear();
     _lines.clear();
     _index.clear();
 
-    std::string line, current_section;
+    std::string line;
+    std::string current_section;
     size_t line_num = 0;
 
-    while (std::getline(file, line)) {
+    // Read each line of the file
+    while (std::getline(file, line))
+    {
         std::string trimmed = trim(line);
-        _lines.push_back(line);
+        _lines.push_back(line);  // Preserve original formatting
 
-        if (trimmed.empty() || is_comment(trimmed)) {
+        // Skip empty lines and full-line comments
+        if (trimmed.empty() || is_comment(trimmed))
+        {
             line_num++;
             continue;
         }
 
-        if (trimmed.front() == '[' && trimmed.back() == ']') {
+        // Handle section headers like [section]
+        if (trimmed.front() == '[' && trimmed.back() == ']')
+        {
             current_section = trimmed.substr(1, trimmed.size() - 2);
-        } else {
+        }
+        else
+        {
+            // Handle key-value pairs like key = value
             size_t pos = trimmed.find('=');
-            if (pos != std::string::npos) {
+            if (pos != std::string::npos)
+            {
                 std::string key = trim(trimmed.substr(0, pos));
                 std::string value = trim(trimmed.substr(pos + 1));
 
+                // Remove inline comment if present
                 size_t comment_pos = value.find_first_of(";#");
-                if (comment_pos != std::string::npos) {
+                if (comment_pos != std::string::npos)
+                {
                     value = trim(value.substr(0, comment_pos));
                 }
 
-                if (!key.empty()) {
+                if (!key.empty())
+                {
                     _data[current_section][key] = value;
                     _index[current_section][key] = line_num;
                 }
             }
         }
+
         line_num++;
     }
 
