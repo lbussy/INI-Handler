@@ -122,6 +122,15 @@ public:
      */
     void commit_changes();
 
+    /**
+     * @brief Retrieves the parsed INI data.
+     * @return A const reference to the internal data storage.
+     */
+    const std::map<std::string, std::unordered_map<std::string, std::string>> &getData() const
+    {
+        return _data;
+    }
+
 private:
     std::string _filename;                                                     ///< Path to the INI file.
     std::map<std::string, std::unordered_map<std::string, std::string>> _data; ///< Internal data storage.
