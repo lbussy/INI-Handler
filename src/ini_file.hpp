@@ -32,9 +32,9 @@
 #ifndef INI_FILE_HPP
 #define INI_FILE_HPP
 
+#include <map>
 #include <string>
 #include <unordered_map>
-#include <map>
 #include <vector>
 
 /**
@@ -126,10 +126,15 @@ public:
      * @brief Retrieves the parsed INI data.
      * @return A const reference to the internal data storage.
      */
-    const std::map<std::string, std::unordered_map<std::string, std::string>> &getData() const
-    {
-        return _data;
-    }
+    const std::map<std::string, std::unordered_map<std::string, std::string>> &getData() const;
+
+    /**
+     * @brief Sets the internal data of the INI file.
+     *
+     * @param data A new mapping of sections to key/value pairs.
+     * @return True if the data was set successfully.
+     */
+    void setData(const std::map<std::string, std::unordered_map<std::string, std::string>> &data);
 
 private:
     std::string _filename;                                                     ///< Path to the INI file.

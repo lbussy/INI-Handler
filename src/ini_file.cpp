@@ -28,13 +28,14 @@
  * SOFTWARE.
  */
 
- #include "ini_file.hpp"
- #include <iostream>
- #include <fstream>
- #include <sstream>
- #include <algorithm>
- #include <cctype>
- #include <stdexcept>
+#include "ini_file.hpp"
+
+#include <algorithm>
+#include <cctype>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 /**
  * @brief Tracks whether there are pending changes to be saved.
@@ -50,7 +51,8 @@ IniFile::IniFile() {}
  * @brief Constructor with filename.
  * @param filename The name of the INI file to load.
  */
-IniFile::IniFile(const std::string &filename) {
+IniFile::IniFile(const std::string &filename)
+{
     set_filename(filename);
     load();
 }
@@ -97,7 +99,7 @@ bool IniFile::load()
     while (std::getline(file, line))
     {
         std::string trimmed = trim(line);
-        _lines.push_back(line);  // Preserve original formatting
+        _lines.push_back(line); // Preserve original formatting
 
         // Skip empty lines and full-line comments
         if (trimmed.empty() || is_comment(trimmed))
@@ -150,40 +152,52 @@ bool IniFile::load()
  * @return True if the file was successfully saved, false otherwise.
  * @throws std::runtime_error If the filename is empty or if the file cannot be opened for writing.
  */
-bool IniFile::save() {
-    if (_filename.empty()) {
+bool IniFile::save()
+{
+    if (_filename.empty())
+    {
         throw std::runtime_error("Null value filename passed for save.");
     }
 
     std::ofstream file(_filename);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         throw std::runtime_error("Cannot write to file " + _filename + ".");
     }
 
     std::string current_section;
-    for (size_t i = 0; i < _lines.size(); ++i) {
+    for (size_t i = 0; i < _lines.size(); ++i)
+    {
         std::string trimmed = trim(_lines[i]);
 
-        if (trimmed.empty() || is_comment(trimmed)) {
+        if (trimmed.empty() || is_comment(trimmed))
+        {
             file << _lines[i] << "\n";
             continue;
         }
 
-        if (trimmed.front() == '[' && trimmed.back() == ']') {
+        if (trimmed.front() == '[' && trimmed.back() == ']')
+        {
             file << _lines[i] << "\n";
             current_section = trimmed.substr(1, trimmed.size() - 2);
             continue;
         }
 
         size_t pos = trimmed.find('=');
-        if (pos != std::string::npos) {
+        if (pos != std::string::npos)
+        {
             std::string key = trim(trimmed.substr(0, pos));
-            if (!key.empty() && _data.count(current_section) && _data.at(current_section).count(key)) {
+            if (!key.empty() && _data.count(current_section) && _data.at(current_section).count(key))
+            {
                 file << key << " = " << _data.at(current_section).at(key) << "\n";
-            } else {
+            }
+            else
+            {
                 file << _lines[i] << "\n";
             }
-        } else {
+        }
+        else
+        {
             file << _lines[i] << "\n";
         }
     }
@@ -199,14 +213,17 @@ bool IniFile::save() {
  * @return The corresponding value as a string.
  * @throws std::runtime_error If the section or key is not found.
  */
-std::string IniFile::get_value(const std::string& section, const std::string& key) const {
+std::string IniFile::get_value(const std::string &section, const std::string &key) const
+{
     auto sec = _data.find(section);
-    if (sec == _data.end()) {
+    if (sec == _data.end())
+    {
         throw std::runtime_error("Error retrieving [" + section + "] from '" + _filename + "'.");
     }
 
     auto val = sec->second.find(key);
-    if (val == sec->second.end()) {
+    if (val == sec->second.end())
+    {
         throw std::runtime_error("Error retrieving '" + key + "' from section [" + section + "].");
     }
     return val->second;
@@ -219,7 +236,8 @@ std::string IniFile::get_value(const std::string& section, const std::string& ke
  * @return The string representation of the stored value.
  * @throws std::runtime_error If the section or key is not found.
  */
-std::string IniFile::get_string_value(const std::string& section, const std::string& key) const {
+std::string IniFile::get_string_value(const std::string &section, const std::string &key) const
+{
     return get_value(section, key);
 }
 
@@ -230,13 +248,19 @@ std::string IniFile::get_string_value(const std::string& section, const std::str
  * @return The integer representation of the stored value.
  * @throws std::runtime_error If the section or key is not found, or if the value cannot be converted to an integer.
  */
-int IniFile::get_int_value(const std::string& section, const std::string& key) const {
+int IniFile::get_int_value(const std::string &section, const std::string &key) const
+{
     std::string value = get_value(section, key); // Let this throw if needed
-    try {
+    try
+    {
         return std::stoi(value);
-    } catch (const std::invalid_argument&) {
+    }
+    catch (const std::invalid_argument &)
+    {
         throw std::runtime_error("Key '" + key + "' in section [" + section + "] is not a valid integer: '" + value + "'");
-    } catch (const std::out_of_range&) {
+    }
+    catch (const std::out_of_range &)
+    {
         throw std::runtime_error("Key '" + key + "' in section [" + section + "] is out of range for integer: '" + value + "'");
     }
 }
@@ -249,7 +273,8 @@ int IniFile::get_int_value(const std::string& section, const std::string& key) c
  * @param value The string to convert.
  * @return True if the string represents a true value, otherwise false.
  */
-bool IniFile::string_to_bool(const std::string &value) {
+bool IniFile::string_to_bool(const std::string &value)
+{
     std::string lower_value = value;
     std::transform(lower_value.begin(), lower_value.end(), lower_value.begin(), ::tolower);
     return (lower_value == "true" || lower_value == "t" || lower_value == "1");
@@ -263,13 +288,19 @@ bool IniFile::string_to_bool(const std::string &value) {
  * @throws std::runtime_error If the section or key is not found, or if the value
  *         cannot be converted to a double.
  */
-double IniFile::get_double_value(const std::string& section, const std::string& key) const {
+double IniFile::get_double_value(const std::string &section, const std::string &key) const
+{
     std::string value = get_value(section, key); // Let this throw if needed
-    try {
+    try
+    {
         return std::stod(value);
-    } catch (const std::invalid_argument&) {
+    }
+    catch (const std::invalid_argument &)
+    {
         throw std::runtime_error("Key '" + key + "' in section [" + section + "] is not a valid double: '" + value + "'");
-    } catch (const std::out_of_range&) {
+    }
+    catch (const std::out_of_range &)
+    {
         throw std::runtime_error("Key '" + key + "' in section [" + section + "] is out of range for double: '" + value + "'");
     }
 }
@@ -281,7 +312,8 @@ double IniFile::get_double_value(const std::string& section, const std::string& 
  * @return The boolean representation of the stored value.
  * @throws std::runtime_error If the section or key is not found.
  */
-bool IniFile::get_bool_value(const std::string& section, const std::string& key) const {
+bool IniFile::get_bool_value(const std::string &section, const std::string &key) const
+{
     return string_to_bool(get_value(section, key));
 }
 
@@ -292,7 +324,8 @@ bool IniFile::get_bool_value(const std::string& section, const std::string& key)
  * @param value The string value to set.
  */
 // cppcheck-suppress unusedFunction
-void IniFile::set_string_value(const std::string& section, const std::string& key, const std::string& value) {
+void IniFile::set_string_value(const std::string &section, const std::string &key, const std::string &value)
+{
     _data[section][key] = value;
     _pendingChanges = true;
 }
@@ -302,7 +335,8 @@ void IniFile::set_string_value(const std::string& section, const std::string& ke
  * @param value The boolean value to convert.
  * @return "true" if the value is true, otherwise "false".
  */
-std::string IniFile::bool_to_string(bool value) {
+std::string IniFile::bool_to_string(bool value)
+{
     return value ? "true" : "false";
 }
 
@@ -312,7 +346,8 @@ std::string IniFile::bool_to_string(bool value) {
  * @param key The key name.
  * @param value The boolean value to set.
  */
-void IniFile::set_bool_value(const std::string& section, const std::string& key, bool value) {
+void IniFile::set_bool_value(const std::string &section, const std::string &key, bool value)
+{
     _data[section][key] = bool_to_string(value);
     _pendingChanges = true;
 }
@@ -323,7 +358,8 @@ void IniFile::set_bool_value(const std::string& section, const std::string& key,
  * @param key The key name.
  * @param value The integer value to set.
  */
-void IniFile::set_int_value(const std::string& section, const std::string& key, int value) {
+void IniFile::set_int_value(const std::string &section, const std::string &key, int value)
+{
     _data[section][key] = std::to_string(value);
     _pendingChanges = true;
 }
@@ -334,7 +370,8 @@ void IniFile::set_int_value(const std::string& section, const std::string& key, 
  * @param key The key name.
  * @param value The double value to set.
  */
-void IniFile::set_double_value(const std::string& section, const std::string& key, double value) {
+void IniFile::set_double_value(const std::string &section, const std::string &key, double value)
+{
     _data[section][key] = std::to_string(value);
     _pendingChanges = true;
 }
@@ -344,7 +381,8 @@ void IniFile::set_double_value(const std::string& section, const std::string& ke
  * @param str The input string to be trimmed.
  * @return A new string with whitespace removed from both ends.
  */
-std::string IniFile::trim(const std::string &str) {
+std::string IniFile::trim(const std::string &str)
+{
     size_t first = str.find_first_not_of(" \t\r\n");
     size_t last = str.find_last_not_of(" \t\r\n");
     return (first == std::string::npos) ? "" : str.substr(first, (last - first + 1));
@@ -355,7 +393,8 @@ std::string IniFile::trim(const std::string &str) {
  * @param line The line to check.
  * @return True if the line is a comment, false otherwise.
  */
-bool IniFile::is_comment(const std::string &line) {
+bool IniFile::is_comment(const std::string &line)
+{
     return line.empty() || line.front() == ';' || line.front() == '#';
 }
 
@@ -365,18 +404,42 @@ bool IniFile::is_comment(const std::string &line) {
  *          and resets the pending changes flag.
  */
 // cppcheck-suppress unusedFunction
-void IniFile::commit_changes() {
-    if (_pendingChanges) {
+void IniFile::commit_changes()
+{
+    if (_pendingChanges)
+    {
         save();
         _pendingChanges = false;
     }
 }
 
 /**
+ * @brief Retrieves the parsed INI data.
+ * @return A const reference to the internal data storage.
+ */
+const std::map<std::string, std::unordered_map<std::string, std::string>> &IniFile::getData() const
+{
+    return _data;
+}
+
+/**
+ * @brief Sets the internal data of the INI file.
+ *
+ * @param data A new mapping of sections to key/value pairs.
+ * @return True if the data was set successfully.
+ */
+// cppcheck-suppress unusedFunction
+void IniFile::setData(const std::map<std::string, std::unordered_map<std::string, std::string>> &data)
+{
+    _data = data;
+}
+
+/**
  * @brief Sets the filename and reloads the INI file.
  * @param filename The filename to set.
  */
-void IniFile::set_filename(const std::string &filename) {
+void IniFile::set_filename(const std::string &filename)
+{
     _filename = filename;
     load();
 }
