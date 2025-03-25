@@ -48,7 +48,7 @@ class IniFile
 {
 public:
     /**
-     * @brief Constructor with no file ilename reference.
+     * @brief Constructor with no file reference.
      */
     explicit IniFile();
 
