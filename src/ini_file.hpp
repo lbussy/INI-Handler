@@ -5,7 +5,7 @@
  *          configuration values from an INI file format. Supports string,
  *          boolean, integer, and double values with optional default values.
  *
- * This software is distributed under the MIT License. See LICENSE.MIT.md for
+ * This software is distributed under the MIT License. See LICENSE.md for
  * details.
  *
  * Copyright (C) 2023-2025 Lee C. Bussy (@LBussy). All rights reserved.

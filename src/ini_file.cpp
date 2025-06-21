@@ -4,7 +4,7 @@
  * @details This class provides methods for loading, saving, and retrieving
  *          configuration values from an INI file, supporting multiple data types.
  *
- * This software is distributed under the MIT License. See LICENSE.MIT.md for
+ * This software is distributed under the MIT License. See LICENSE.md for
  * details.
  *
  * Copyright (C) 2023-2025 Lee C. Bussy (@LBussy). All rights reserved.
