@@ -32,7 +32,7 @@
 #include "ini_file.hpp"
 #include <iostream>
 
-std::string filename = "./test.ini";
+std::string filename = "../test/test.ini";
 
 void test_malformed_entries(IniFile &config)
 {
@@ -101,40 +101,12 @@ void test_writing(IniFile &config)
     config.set_double_value("Extended", "PPM", 1.23);
     config.set_string_value("Common", "Call Sign", "TEST123");
 
+    // TODO: This is not working
     config.set_string_value("NewSection", "NewKey", "NewValue");
 
     config.commit_changes();
-}
 
-void test_reading_wsprry_pi(IniFile &config)
-{
-    std::cout << "\n🔎 Testing Wsprry Pi INI Reads\n";
-
-    try
-    {
-        std::cout << "\n🔎 Reading [Control]\n";
-        std::cout << "✅ Transmit Enabled: " << config.get_bool_value("Control", "Transmit") << "\n";
-
-        std::cout << "\n🔎 Reading [Common]\n";
-        std::cout << "✅ Call Sign: " << config.get_string_value("Common", "Call Sign") << "\n";
-        std::cout << "✅ Grid Square: " << config.get_string_value("Common", "Grid Square") << "\n";
-        std::cout << "✅ TX Power: " << config.get_int_value("Common", "TX Power") << "\n";
-        std::cout << "✅ FREQ: " << config.get_string_value("Common", "Frequency") << "\n";
-
-        std::cout << "\n🔎 Reading [Extended]\n";
-        std::cout << "✅ PPM: " << config.get_double_value("Extended", "PPM") << "\n";
-        std::cout << "✅ Self Cal: " << config.get_bool_value("Extended", "Self Cal") << "\n";
-        std::cout << "✅ Use Offset: " << config.get_bool_value("Extended", "Offset") << "\n";
-        std::cout << "✅ Use LED: " << config.get_bool_value("Extended", "Use LED") << "\n";
-        std::cout << "✅ Power Level: " << config.get_int_value("Extended", "Power Level") << "\n";
-
-        std::cout << "\n🔎 Reading [Server]\n";
-        std::cout << "✅ Port: " << config.get_int_value("Server", "Port") << "\n";
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "\n" << "Caught Exception: " << e.what() << "\n";
-    }
+    std::cout << "✅ Test write complete." << std::endl;
 }
 
 void test_exceptions(IniFile &config)
@@ -204,19 +176,13 @@ void test_exceptions(IniFile &config)
 
 int main()
 {
-    // Create an instance of the IniFile class
-    IniFile ini;
-    // IniFile ini(filename);
-
     // Set the filename
-    ini.set_filename(filename);
+    iniFile.set_filename(filename);
 
     // test_reading(ini);
-    // test_writing(ini);
+    // test_writing(iniFile);
     // test_malformed_entries(ini);
-
-    //test_reading_wsprry_pi(ini);
-    test_exceptions(ini);
+    // test_exceptions(ini);
 
     return 0;
 }

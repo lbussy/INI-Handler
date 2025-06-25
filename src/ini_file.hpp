@@ -48,15 +48,14 @@ class IniFile
 {
 public:
     /**
-     * @brief Constructor with no file reference.
+     * @brief Returns the singleton IniFile instance.
+     *
+     * Constructs the static IniFile object upon first invocation and
+     * returns a reference to it. Ensures only one instance exists.
+     *
+     * @return Reference to the single IniFile instance.
      */
-    explicit IniFile();
-
-    /**
-     * @brief Constructor with filename reference.
-     * @param filename Path to the INI file.
-     */
-    explicit IniFile(const std::string &filename);
+    static IniFile &instance();
 
     /**
      * @brief Sets the filename for loading and saving operations.
@@ -89,33 +88,77 @@ public:
      * @brief Retrieves a string value with an optional default.
      */
     std::string get_string_value(const std::string &section, const std::string &key) const;
-    // std::string get_string_value(const std::string &section, const std::string &key, const std::string &default_value) const;
 
     /**
      * @brief Retrieves a boolean value with an optional default.
      */
     bool get_bool_value(const std::string &section, const std::string &key) const;
-    // bool get_bool_value(const std::string &section, const std::string &key, bool default_value) const;
 
     /**
      * @brief Retrieves an integer value with an optional default.
      */
     int get_int_value(const std::string &section, const std::string &key) const;
-    // int get_int_value(const std::string &section, const std::string &key, int default_value) const;
 
     /**
      * @brief Retrieves a double value with an optional default.
      */
     double get_double_value(const std::string &section, const std::string &key) const;
-    // double get_double_value(const std::string &section, const std::string &key, double default_value) const;
 
     /**
      * @brief Sets a string value in the INI file.
+     *
+     * Updates the internal data map with the given section/key and
+     * marks the file as having pending changes.
+     *
+     * @param section  The section under which to store the value.
+     * @param key      The key within the section.
+     * @param value    The string value to assign to the key.
      */
-    void set_string_value(const std::string &section, const std::string &key, const std::string &value);
-    void set_bool_value(const std::string &section, const std::string &key, bool value);
-    void set_int_value(const std::string &section, const std::string &key, int value);
-    void set_double_value(const std::string &section, const std::string &key, double value);
+    void set_string_value(const std::string &section,
+                          const std::string &key,
+                          const std::string &value);
+
+    /**
+     * @brief Sets a boolean value in the INI file.
+     *
+     * Converts the boolean to "true"/"false", updates the internal data,
+     * and marks the file as having pending changes.
+     *
+     * @param section  The section under which to store the value.
+     * @param key      The key within the section.
+     * @param value    The boolean value to assign to the key.
+     */
+    void set_bool_value(const std::string &section,
+                        const std::string &key,
+                        bool value);
+
+    /**
+     * @brief Sets an integer value in the INI file.
+     *
+     * Converts the integer to its string representation, updates the internal
+     * data, and marks the file as having pending changes.
+     *
+     * @param section  The section under which to store the value.
+     * @param key      The key within the section.
+     * @param value    The integer value to assign to the key.
+     */
+    void set_int_value(const std::string &section,
+                       const std::string &key,
+                       int value);
+
+    /**
+     * @brief Sets a double value in the INI file.
+     *
+     * Converts the double to its string representation, updates the internal
+     * data, and marks the file as having pending changes.
+     *
+     * @param section  The section under which to store the value.
+     * @param key      The key within the section.
+     * @param value    The double value to assign to the key.
+     */
+    void set_double_value(const std::string &section,
+                          const std::string &key,
+                          double value);
 
     /**
      * @brief Commits any pending changes to the INI file.
@@ -137,10 +180,80 @@ public:
     void setData(const std::map<std::string, std::unordered_map<std::string, std::string>> &data);
 
 private:
-    std::string _filename;                                                     ///< Path to the INI file.
-    std::map<std::string, std::unordered_map<std::string, std::string>> _data; ///< Internal data storage.
-    std::vector<std::string> _lines;                                           ///< Stores original file lines for integrity.
-    std::map<std::string, std::map<std::string, size_t>> _index;               ///< Index mapping for fast lookups.
+    /**
+     * @brief Default constructor.
+     *
+     * Constructs an IniFile with no filename set. Use set_filename() before use.
+     */
+    IniFile() = default;
+
+    /**
+     * @brief Default destructor.
+     *
+     * Tears down an IniFile.
+     */
+    ~IniFile() = default;
+
+    /**
+     * @brief Deleted copy constructor.
+     *
+     * Prevents copying of the singleton instance.
+     */
+    IniFile(const IniFile &) = delete;
+
+    /**
+     * @brief Deleted move constructor.
+     *
+     * Prevents moving of the singleton instance.
+     */
+    IniFile(IniFile &&) = delete;
+
+    /**
+     * @brief Deleted copy-assignment operator.
+     *
+     * Prevents assigning from another IniFile, preserving singleton uniqueness.
+     *
+     * @return Reference to this instance.
+     */
+    IniFile &operator=(const IniFile &) = delete;
+
+    /**
+     * @brief Deleted move-assignment operator.
+     *
+     * Prevents move-assigning from another IniFile, preserving singleton uniqueness.
+     *
+     * @return Reference to this instance.
+     */
+    IniFile &operator=(IniFile &&) = delete;
+
+    /**
+     * @brief Path to the INI configuration file.
+     *
+     * This filename is used by load() and save() to access the file on disk.
+     */
+    std::string _filename;
+
+    /**
+     * @brief Internal data storage.
+     *
+     * Maps each section name to a map of key/value string pairs.
+     */
+    std::map<std::string, std::unordered_map<std::string, std::string>> _data;
+
+    /**
+     * @brief Original file lines.
+     *
+     * Stores every line from the INI file, including comments and blank lines,
+     * to allow preservation of formatting on save().
+     */
+    std::vector<std::string> _lines;
+
+    /**
+     * @brief Fast lookup index.
+     *
+     * Maps section/key pairs to their line number in _lines for in-place edits.
+     */
+    std::map<std::string, std::map<std::string, size_t>> _index;
 
     /**
      * @brief Trims whitespace from a string.

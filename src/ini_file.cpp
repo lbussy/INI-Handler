@@ -43,17 +43,26 @@
 bool _pendingChanges = false;
 
 /**
- * @brief Default constructor.
+ * @brief Returns the singleton IniFile instance.
+ *
+ * Constructs the static IniFile object upon first invocation and
+ * returns a reference to it. Ensures only one instance exists.
+ *
+ * @return Reference to the single IniFile instance.
  */
-IniFile::IniFile() {}
+IniFile &IniFile::instance()
+{
+    static IniFile inst;
+    return inst;
+}
 
 /**
- * @brief Constructor with filename.
- * @param filename The name of the INI file to load.
+ * @brief Sets the filename and reloads the INI file.
+ * @param filename The filename to set.
  */
-IniFile::IniFile(const std::string &filename)
+void IniFile::set_filename(const std::string &filename)
 {
-    set_filename(filename);
+    _filename = filename;
     load();
 }
 
@@ -432,14 +441,4 @@ const std::map<std::string, std::unordered_map<std::string, std::string>> &IniFi
 void IniFile::setData(const std::map<std::string, std::unordered_map<std::string, std::string>> &data)
 {
     _data = data;
-}
-
-/**
- * @brief Sets the filename and reloads the INI file.
- * @param filename The filename to set.
- */
-void IniFile::set_filename(const std::string &filename)
-{
-    _filename = filename;
-    load();
 }

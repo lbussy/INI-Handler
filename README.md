@@ -6,6 +6,7 @@ This project is a simple and efficient **INI file parser** written in C++. It pr
 
 ## Features
 
+- Meyers' singleton - access the class with the alias `iniFile`
 - Load and save INI files while maintaining formatting and comments.
 - Retrieve values as **string, boolean, integer, and double**.
 - Supports **default values** when retrieving data.
@@ -47,7 +48,7 @@ This project is a simple and efficient **INI file parser** written in C++. It pr
 ```cpp
 #include "ini_file.hpp"
 
-IniFile config("config.ini");
+iniFile.set_filename("config.ini");
 std::string value = config.get_string_value("Settings", "Theme");
 int number = config.get_int_value("Settings", "MaxUsers", 100);
 ```
